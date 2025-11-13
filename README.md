@@ -30,7 +30,7 @@ After installing Ollama, open a **terminal (CMD or Powershell)** and run:
 
 ```bash
 ollama pull mistral
-
+```bash
 ---
 
 📦 3. Clone the project
@@ -38,6 +38,7 @@ ollama pull mistral
 ```bash
 git clone https://github.com/YOUR-REPO/LLM-GenAI-ChatBot-ESILV.git
 cd LLM-GenAI-ChatBot-ESILV
+```bash
 
 ---
 
@@ -47,15 +48,16 @@ At the root of the project:
 
 ```bash
 python -m pip install -r requirements.txt
+```bash
 
 ---
 
 🚀 5. Start the backend (FastAPI)
 
 In a new terminal:
-
+```bash
 uvicorn backend.main:app --reload
-
+```bash
 
 Backend is available at:
 👉 http://127.0.0.1:8000
@@ -68,10 +70,10 @@ API docs:
 💬 6. Start the frontend (Streamlit)
 
 In another terminal:
-
+```bash
 cd frontend
 python -m streamlit run app.py
-
+```bash
 
 Frontend UI is available at:
 👉 http://localhost:8501
