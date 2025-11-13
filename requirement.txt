@@ -1,0 +1,14 @@
+# Backend
+fastapi
+uvicorn[standard]
+pydantic-settings
+httpx
+
+# Frontend
+streamlit
+requests
+
+# RAG
+chromadb
+sentence-transformers
+pypdf
