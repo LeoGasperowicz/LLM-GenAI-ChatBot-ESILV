@@ -32,7 +32,7 @@ ollama pull mistral
 
 ---
 
-📦 3. Clone the project
+# 📦 3. Clone the project
 
 git clone https://github.com/YOUR-REPO/LLM-GenAI-ChatBot-ESILV.git
 cd LLM-GenAI-ChatBot-ESILV
@@ -40,7 +40,7 @@ cd LLM-GenAI-ChatBot-ESILV
 
 ---
 
-📚 4. Install dependencies
+# 📚 4. Install dependencies
 
 At the root of the project:
 
@@ -49,7 +49,7 @@ python -m pip install -r requirements.txt
 
 ---
 
-🚀 5. Start the backend (FastAPI)
+# 🚀 5. Start the backend (FastAPI)
 
 In a new terminal:
 ```bash
@@ -64,7 +64,7 @@ API docs:
 
 ---
 
-💬 6. Start the frontend (Streamlit)
+# 💬 6. Start the frontend (Streamlit)
 
 In another terminal:
 ```bash
