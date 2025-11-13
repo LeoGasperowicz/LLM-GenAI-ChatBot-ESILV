@@ -28,17 +28,15 @@ Ollama is required to run the **Mistral** LLM locally.
 # 🤖 2. Install the Mistral model 
 After installing Ollama, open a **terminal (CMD or Powershell)** and run:
 
-```bash
 ollama pull mistral
-```bash
+
 ---
 
 📦 3. Clone the project
 
-```bash
 git clone https://github.com/YOUR-REPO/LLM-GenAI-ChatBot-ESILV.git
 cd LLM-GenAI-ChatBot-ESILV
-```bash
+
 
 ---
 
@@ -46,7 +44,6 @@ cd LLM-GenAI-ChatBot-ESILV
 
 At the root of the project:
 
-```bash
 python -m pip install -r requirements.txt
 ```bash
 
