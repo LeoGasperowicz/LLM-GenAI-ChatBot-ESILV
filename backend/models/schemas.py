@@ -1,4 +1,4 @@
-from typing import Optional, Literal, List
+from typing import Literal, List, Dict, Any, Optional
 from pydantic import BaseModel, Field
 from datetime import datetime
 
@@ -15,8 +15,10 @@ class ChatResponse(BaseModel):
     reply: str
     agent: Literal["rag_agent", "form_agent", "orchestrator"]
     intent: Literal["faq", "contact", "unknown"]
-    context_documents: list[str] = []
-    metadata: dict = {}
+    metadata: Optional[Dict[str, Any]] = None
+
+    # 🔥 On veut ici une liste de dicts pour les documents de contexte RAG
+    context_documents: Optional[List[Dict[str, Any]]] = None
 
 
 class ContactInfo(BaseModel):

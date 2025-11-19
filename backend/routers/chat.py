@@ -50,8 +50,8 @@ async def chat(message: ChatMessage) -> ChatResponse:
     context_docs = result.get("sources", [])
 
     # Tu peux mettre ce que tu veux ici comme "agent" et "intent"
-    agent_name = "rag_esilv"
-    intent_name = "information_esilv"
+    agent_name = "rag_agent"
+    intent_name = "faq"
 
     # 3) Ajouter la réponse de l'assistant à la conversation
     conversation.turns.append(

@@ -23,23 +23,23 @@ def _handle_response(resp: requests.Response) -> Any:
 def chat(user_id: Optional[str], message: str) -> Dict[str, Any]:
     url = f"{BACKEND_BASE_URL}/chat/"
     payload = {"user_id": user_id, "message": message}
-    resp = requests.post(url, json=payload, timeout=30)
+    resp = requests.post(url, json=payload, timeout=300)
     return _handle_response(resp)
 
 
 def get_conversation(user_id: str) -> Dict[str, Any]:
     url = f"{BACKEND_BASE_URL}/chat/conversation/{user_id}"
-    resp = requests.get(url, timeout=10)
+    resp = requests.get(url, timeout=300)
     return _handle_response(resp)
 
 
 def get_admin_stats() -> Dict[str, Any]:
     url = f"{BACKEND_BASE_URL}/admin/stats"
-    resp = requests.get(url, timeout=10)
+    resp = requests.get(url, timeout=300)
     return _handle_response(resp)
 
 
 def get_contacts() -> List[Dict[str, Any]]:
     url = f"{BACKEND_BASE_URL}/admin/contacts"
-    resp = requests.get(url, timeout=10)
+    resp = requests.get(url, timeout=300)
     return _handle_response(resp)

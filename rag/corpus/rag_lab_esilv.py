@@ -173,7 +173,7 @@ async def answer_with_rag(question: str, llm_call) -> Dict[str, Any]:
         ]
     }
     """
-    docs = retrieve_docs(question, k=4)
+    docs = retrieve_docs(question, k=20)
     prompt = build_prompt(docs, question)
     answer = await llm_call(prompt)
 
