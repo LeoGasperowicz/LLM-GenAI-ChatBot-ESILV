@@ -55,6 +55,34 @@ L'assistant peut répondre à des questions sur :
             with st.chat_message("assistant"):
                 st.write(msg["content"])
                 meta = msg.get("meta") or {}
+
+                # 🔍 Afficher les sources RAG pour les anciens messages
+                ctx_docs = meta.get("context_documents") or []
+                if ctx_docs:
+                    st.markdown("**📚 Sources utilisées :**")
+                    for i, doc in enumerate(ctx_docs, start=1):
+                        source = doc.get("source") or f"Document {i}"
+                        page = doc.get("page")
+                        url = doc.get("url")
+                        snippet = doc.get("snippet") or ""
+
+                        # Lien cliquable si une URL est fournie
+                        if url:
+                            label = f"{source}"
+                            if page not in (None, "N/A"):
+                                label += f" — page {page}"
+                            st.markdown(f"- 📄 [{label}]({url})")
+                        else:
+                            if page not in (None, "N/A"):
+                                st.markdown(f"- 📄 {source} — page {page}")
+                            else:
+                                st.markdown(f"- 📄 {source}")
+
+                        # Petit extrait
+                        if snippet:
+                            st.caption(snippet[:300] + ("…" if len(snippet) > 300 else ""))
+
+                # Détails techniques (debug)
                 if "agent" in meta or "intent" in meta:
                     with st.expander("Détails techniques (debug)", expanded=False):
                         st.json(meta)
@@ -99,6 +127,32 @@ L'assistant peut répondre à des questions sur :
         # Afficher la réponse
         with st.chat_message("assistant"):
             st.write(reply_text)
+
+            # 🔍 Afficher les documents de contexte (RAG) renvoyés par le backend
+            ctx_docs = meta.get("context_documents") or []
+            if ctx_docs:
+                st.markdown("**📚 Sources utilisées :**")
+                for i, doc in enumerate(ctx_docs, start=1):
+                    source = doc.get("source") or f"Document {i}"
+                    page = doc.get("page")
+                    url = doc.get("url")
+                    snippet = doc.get("snippet") or ""
+
+                    if url:
+                        label = f"{source}"
+                        if page not in (None, "N/A"):
+                            label += f" — page {page}"
+                        st.markdown(f"- 📄 [{label}]({url})")
+                    else:
+                        if page not in (None, "N/A"):
+                            st.markdown(f"- 📄 {source} — page {page}")
+                        else:
+                            st.markdown(f"- 📄 {source}")
+
+                    if snippet:
+                        st.caption(snippet[:300] + ("…" if len(snippet) > 300 else ""))
+
+            # Bloc debug
             if meta:
                 with st.expander("Détails techniques (debug)", expanded=False):
                     st.json(meta)

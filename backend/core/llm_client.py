@@ -3,6 +3,10 @@ import httpx
 
 from .settings import settings
 
+# 🔗 Import du RAG
+# Adapte le chemin si nécessaire selon ta structure réelle
+from rag.corpus.rag_lab_esilv import answer_with_rag as rag_answer_with_rag
+
 
 class LLMClient:
     def __init__(self, provider: Literal["ollama", "gcp", "local"] | None = None):
@@ -11,6 +15,9 @@ class LLMClient:
         self.base_url = settings.OLLAMA_BASE_URL
 
     async def generate(self, prompt: str, system_prompt: str | None = None) -> str:
+        """
+        Appel brut au LLM (Ollama) sans RAG.
+        """
         if self.provider != "ollama":
             raise RuntimeError(f"Provider LLM non supporté: {self.provider}")
 
@@ -37,5 +44,36 @@ class LLMClient:
 
         return content
 
+    async def generate_with_rag(self, question: str) -> Dict[str, Any]:
+        """
+        Appel au LLM **avec** RAG ESILV.
 
+        - Récupère les documents pertinents (PDF + TXT) via FAISS.
+        - Construit un prompt de contexte.
+        - Appelle self.generate() pour obtenir la réponse du LLM.
+        - Retourne :
+          {
+            "answer": str,
+            "sources": [
+                {
+                    "source": str,
+                    "page": int | "N/A",
+                    "metadata": {...},
+                    "snippet": str,
+                },
+                ...
+            ]
+          }
+        """
+
+        async def _llm_call(prompt: str) -> str:
+            # On laisse le RAG construire tout le prompt,
+            # donc pas de system_prompt ici.
+            return await self.generate(prompt)
+
+        result = await rag_answer_with_rag(question, llm_call=_llm_call)
+        return result
+
+
+# Instance globale utilisée ailleurs dans ton projet
 llm_client = LLMClient()
