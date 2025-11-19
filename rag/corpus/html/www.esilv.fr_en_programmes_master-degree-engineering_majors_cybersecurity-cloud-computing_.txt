@@ -1,0 +1,629 @@
+URL: https://www.esilv.fr/en/programmes/master-degree-engineering/majors/cybersecurity-cloud-computing/
+
+Student projects
+Student guide
+Our Campuses
+News
+Menu
+The School
+Message from the Dean
+Rankings
+Accreditations & Networks
+Our mission
+The “Titre d’ingénieur” (national master’s degree in engineering)
+Educational project
+Close
+News
+Programmes
+Master’s degree in engineering
+5-year Grande Ecole Programme, CTI, CGE & RNCP Accredited. Majors :
+Data Engineering & AI
+Modelling & Computational Mechanics
+Cybersecurity & Cloud Computing
+Creative Technology
+Fintech
+MedTech & Health
+Financial Engineering
+Energy & Sustainable Cities
+Industry & Robotics
+Cybersecurity & IOT Trust
+Actuarial Science
+Eco-design and Sustainable Innovation
+Software Engineering & AI
+Sustainable Manufacturing
+MSc Computer Science & Data Science
+MSc Aeronautical & Aerospatial Engineering
+MSc Financial Engineering
+MSc Cyber Resilience & Crisis Leadership
+MSc Fintech & Digital Banking
+MSc Innovation & Creative Technology
+Exchange students
+Exchange programmes
+Welcome Desk
+Summer Programme
+Immersive summer program combining business, engineering, and digital technology skills.
+Engineer-Manager Double Degree
+Close
+Faculty & Research
+De Vinci Research Center
+Faculty
+Close
+International
+Degree seeking students
+Exchange students
+De Vinci Higher Education Summer Programme
+International Double Degrees
+Incoming and outgoing mobility
+Partner universities
+Scholarships and funding
+Close
+Careers & Companies
+Become a partner company
+Propose a project to our students
+First job survey
+Alumni Network
+Close
+Student Services
+Welcome Desk
+Health, prevention & disability
+Student associations
+Our Campuses
+Student guide
+Close
+Cybersecurity & Cloud Computing
+IT through cybersecurity
+Engineer’s degree (
+diplôme d’ingénieur
+) with a major in computer security in a French CTI-accredited engineering school
+This major is for engineers undertaking the complete software development and runtime system cycle. It prepares students for the major cybersecurity and cloud computing issues that all businesses face.
+This course is offered on the
+Paris
+campus.
+Apply now
+IT & cybersecurity
+ESILV Master’s Degree in Engineering
+ESILV is a member of Campus Cyber, an initiative that brings together the major players in cybersecurity in France.
+Teaching
+Machine learning & data science
+Cloud computing and data centres
+Secure system design
+Secure software design
+Advanced software development
+Operating systems management
+Platform as a service
+Infrastructure as code
+Skills
+Carrying out, developing and managing an IT project
+Mastering the design and integration of cybersecurity solutions
+Monitoring software solution runtime systems
+Automatically considering security in all innovation processes
+IT & security careers
+Cybersecurity Engineer, Full Stack Developer, DevSecOps Engineer, Cloud Engineer, Security Solutions Integrator
+#CLOUD
+#AI
+#CYBERSÉCURITÉ
+#DEVOPS
+#DEVSECOPS
+Examples of student projects in Cybersecurity
+Produced by ESILV engineering students
+Automated autopsy report writing
+Core distribution, option hedging and systematic strategy
+Mobile application from RTA (Responsible Tourism Advisor)
+KCS02 : Automatic trade booking via NLP
+Blockchain Security / DevOps
+Creation of a platform to measure availability based on micro PCs
+Embedded Station Blanche
+Developing a model for calculating the residual value of construction equipment
+Study of the low-cycle fatigue life of aeronautical Al structures
+#PI²4  Creation of an Online Platform for Data Dissemination
+Python Program Development to Optimize the Profitability of Hydroelectric Structures
+#PI²4 Automation of Closing Inventory Tasks
+Cybersecurity News
+ECCWS & German Research Center for AI: Myriam, class of 2025, joins European debate on evolving cybersecurity practices
+15 July 2025
+Myriam, class of 2025, presented her first academic paper at the European Conference on Cyber Warfare and Security (ECCWS). Her research questions the current vulnerability…
+Learn more →
+AI vs. Hackers: Can Smart Machines Keep Us Safe? An article by ESILV’s Research Track
+18 March 2025
+Cybersecurity is vital in protecting personal data, financial assets, and critical infrastructure from cyber threats. As digital interactions increase, so do the risks, making robust…
+Learn more →
+IFT Talk: Cybersecurity Innovation & Technology Transfer
+23 July 2024
+In collaboration with the Programme de Transfert au Campus Cyber (PTCC), the Institute for Future Technologies (IFT) hosted a talk featuring MIT researcher-entrepreneurs Dr. Tina…
+Learn more →
+MSc Cyber Resilience & Crisis Leadership: A one-year intensive course to Navigate the Cybersecurity Landscape
+9 January 2024
+ESILV introduces the MSc Cyber Resilience & Crisis Leadership programme. A one-year intensive course, situated in the heart of Paris, aiming to develop a strategic…
+Learn more →
+Behind the Career Pathways and Emerging Roles and Skills for 2024 in Cybersecurity
+7 December 2023
+Cybersecurity is perpetually in flux, driven by the relentless advance of technology. As we approach 2024, aspiring cybersecurity professionals must stay ahead of the curve.…
+Learn more →
+Célia, class of 2023: my cybersecurity internship
+9 May 2023
+Célia Barras combined her computer science studies with a work-study experience in a growing company. This opportunity allowed her to start thinking about her professional…
+Learn more →
+Majors
+Eco-design and Sustainable Innovation
+Sustainable Manufacturing
+MedTech & Health
+Industry & Robotics
+Fintech
+Actuarial Science
+Software Engineering & AI
+Cybersecurity & Cloud Computing
+Creative Technology
+Data Engineering & AI
+Energy & Sustainable Cities
+Modelling & Computational Mechanics
+Financial Engineering
+Cybersecurity & IOT Trust
+Contact us
+Apply now
+Need information ?
+Contact us and we will help you
+Please select your country
+Afghanistan
+Albania
+Algeria
+American Samoa
+Andorra
+Angola
+Anguilla
+Antarctica
+Antigua and Barbuda
+Argentina
+Armenia
+Aruba
+Australia
+Austria
+Azerbaijan
+Bahamas
+Bahrain
+Bangladesh
+Barbados
+Belarus
+Belgium
+Belize
+Benin
+Bermuda
+Bhutan
+Bolivia
+Bonaire, Sint Eustatius, and Saba
+Bosnia and Herzegovina
+Botswana
+Bouvet Island
+Brazil
+British Indian Ocean Territory
+British Virgin Islands
+Brunei
+Bulgaria
+Burkina Faso
+Burundi
+Cabo Verde
+Cambodia
+Cameroon
+Canada
+Cayman Islands
+Central African Republic
+Chad
+Chile
+China
+Christmas Island
+Cocos (Keeling) Islands
+Colombia
+Comoros
+Congo Republic
+Cook Islands
+Costa Rica
+Croatia
+Cuba
+Curaçao
+Cyprus
+Czechia
+DR Congo
+Denmark
+Djibouti
+Dominica
+Dominican Republic
+Ecuador
+Egypt
+El Salvador
+Equatorial Guinea
+Eritrea
+Estonia
+Eswatini
+Ethiopia
+Falkland Islands
+Faroe Islands
+Fiji
+Finland
+France
+French Guiana
+French Polynesia
+French Southern Territories
+Gabon
+Georgia
+Germany
+Ghana
+Gibraltar
+Greece
+Greenland
+Grenada
+Guadeloupe
+Guam
+Guatemala
+Guernsey
+Guinea
+Guinea-Bissau
+Guyana
+Haiti
+Heard and McDonald Islands
+Honduras
+Hong Kong
+Hungary
+Iceland
+India
+Indonesia
+Iran
+Iraq
+Ireland
+Isle of Man
+Israel
+Italy
+Ivory Coast
+Jamaica
+Japan
+Jersey
+Jordan
+Kazakhstan
+Kenya
+Kiribati
+Kosovo
+Kuwait
+Kyrgyzstan
+Laos
+Latvia
+Lebanon
+Lesotho
+Liberia
+Libya
+Liechtenstein
+Lithuania
+Luxembourg
+Macao
+Madagascar
+Malawi
+Malaysia
+Maldives
+Mali
+Malta
+Marshall Islands
+Martinique
+Mauritania
+Mauritius
+Mayotte
+Mexico
+Micronesia
+Moldova
+Monaco
+Mongolia
+Montenegro
+Montserrat
+Morocco
+Mozambique
+Myanmar
+Namibia
+Nauru
+Nepal
+New Caledonia
+New Zealand
+Nicaragua
+Niger
+Nigeria
+Niue
+Norfolk Island
+North Korea
+North Macedonia
+Northern Mariana Islands
+Norway
+Oman
+Pakistan
+Palau
+Palestine
+Panama
+Papua New Guinea
+Paraguay
+Peru
+Philippines
+Pitcairn Islands
+Poland
+Portugal
+Puerto Rico
+Qatar
+Romania
+Russia
+Rwanda
+Réunion
+Saint Barthélemy
+Saint Helena
+Saint Lucia
+Saint Martin
+Saint Pierre and Miquelon
+Samoa
+San Marino
+Saudi Arabia
+Senegal
+Serbia
+Seychelles
+Sierra Leone
+Singapore
+Sint Maarten
+Slovakia
+Slovenia
+Solomon Islands
+Somalia
+South Africa
+South Georgia and South Sandwich Islands
+South Korea
+South Sudan
+Spain
+Sri Lanka
+St Kitts and Nevis
+St Vincent and Grenadines
+Sudan
+Suriname
+Svalbard and Jan Mayen
+Sweden
+Switzerland
+Syria
+São Tomé and Príncipe
+Taiwan
+Tajikistan
+Tanzania
+Thailand
+The Gambia
+The Netherlands
+Timor-Leste
+Togo
+Tokelau
+Tonga
+Trinidad and Tobago
+Tunisia
+Turkmenistan
+Turks and Caicos Islands
+Tuvalu
+Türkiye
+U.S. Outlying Islands
+U.S. Virgin Islands
+Uganda
+Ukraine
+United Arab Emirates
+United Kingdom
+United States
+Uruguay
+Uzbekistan
+Vanuatu
+Vatican City
+Venezuela
+Vietnam
+Wallis and Futuna
+Western Sahara
+Yemen
+Zambia
+Zimbabwe
+Åland
+Which programme are you interested in ?
+—Veuillez choisir une option—
+Master in Engineering
+MSc Cyber Resilience & Crisis Leadership
+MSc Computer Sience & Data Science
+MSc Creative Technology
+MSc Financial Engineering
+MSc Aeronautical & Aerospatial Engineering
+MSc Fintech & Digital Assets
+MSc Game Programing
+What is your highest level of education ?
+—Veuillez choisir une option—
+Secondary / High School
+Undergraduate Degree
+Postgraduate Degree
+Veuillez laisser ce champ vide.
+News
+Graduate School of Engineering
+Gabriela, Class of 2026: An International Path Towards Industry & Robotics at ESILV
+Date: 18 Nov 2025
+After completing her undergraduate studies in Industrial Engineering in Peru, Gabriela Veliz chose France to pursue graduate studies in a country known for its long-standing engineering tradition and its strong industrial......
+Read The Rest →
+The 5 Technologies Redefining Sustainable Aerospace in 2025
+Date: 13 Nov 2025
+Aerospace is entering its green revolution. From hydrogen propulsion to AI-driven aircraft design, engineers are reshaping the skies. As the world pushes toward net-zero emissions, innovation in aviation and space technologies......
+Read The Rest →
+Working in France as an International Student: Everything You Need to Know
+Date: 06 Nov 2025
+From part-time jobs to engineering internships, discover how you can combine study, work, and career growth in France.
+For many international students, studying abroad is not only about earning a degree. Besides the academic......
+Read The Rest →
+Ecole Supérieure d'Ingénieurs
+Léonard de Vinci
+Paris • Nantes • Montpellier
+Tél. : +33 1 81 00 28 38
+admissions@esilv.fr
+Recrutement
+The School
+/
+International programmes
+/
+Careers & Companies
+/
+Student Services
+/
+Legal Mentions
+/
+20 Nov : ESILV Engineering School Webinar : study in Paris
+X
+We use cookies on our website to give you the most relevant experience
+For instance by remembering your preferences or repeated visits. By clicking “Accept”, you consent to the use of ALL the cookies.
+Read more
+Reject
+Cookie Settings
+ACCEPT ALL
+Manage consent
+Close
+Privacy Overview
+This website uses cookies to improve your experience while you navigate through the website. Out of these, the cookies that are categorized as necessary are stored on your browser as they are essential for the working of basic functionalities of the website. We also use third-party cookies that help us analyze and understand how you use this website. These cookies will be stored in your browser only with your consent. You also have the option to opt-out of these cookies. But opting out of some of these cookies may affect your browsing experience.
+Necessary
+Necessary
+Always Enabled
+Necessary cookies are absolutely essential for the website to function properly. These cookies ensure basic functionalities and security features of the website, anonymously.
+Cookie
+Duration
+Description
+apbct_cookies_test
+apbct_cookies_test
+No description
+apbct_page_hits
+Ce cookie sert à filtrer le spam lors des soumissions de formulaire
+apbct_page_hits
+No description
+apbct_prev_referer
+1 year
+Ce cookie sert à filtrer le spam lors des soumissions de formulaire.
+apbct_prev_referer
+No description
+apbct_site_landing_ts
+Ce cookie sert à filtrer le spam lors des soumissions de formulaire
+apbct_site_landing_ts
+No description
+apbct_site_referer
+No description
+apbct_timestamp
+Ce cookie sert à filtrer le spam lors des soumissions de formulaire.
+apbct_timestamp
+No description
+apbct_urls
+No description
+apbct_visible_fields
+1 year
+Ce cookie sert à filtrer le spam lors des soumissions de formulaire.
+apbct_visible_fields
+No description
+apbct_visible_fields_count
+Ce cookie sert à filtrer le spam lors des soumissions de formulaire
+cookielawinfo-checkbox-analytics
+This cookie is set by GDPR Cookie Consent plugin. The cookie is used to store the user consent for the cookies in the category "Analytics".
+cookielawinfo-checkbox-functional
+The cookie is set by GDPR cookie consent to record the user consent for the cookies in the category "Functional".
+cookielawinfo-checkbox-necessary
+This cookie is set by GDPR Cookie Consent plugin. The cookies is used to store the user consent for the cookies in the category "Necessary".
+cookielawinfo-checkbox-necessary
+This cookie is set by GDPR Cookie Consent plugin. The cookies is used to store the user consent for the cookies in the category "Necessary".
+cookielawinfo-checkbox-non-necessary
+This cookie is set by GDPR Cookie Consent plugin. The cookies is used to store the user consent for the cookies in the category "Non Necessary".
+cookielawinfo-checkbox-others
+This cookie is set by GDPR Cookie Consent plugin. The cookie is used to store the user consent for the cookies in the category "Other.
+cookielawinfo-checkbox-performance
+This cookie is set by GDPR Cookie Consent plugin. The cookie is used to store the user consent for the cookies in the category "Performance".
+csrftoken
+This cookie is associated with Django web development platform for python. Used to help protect the website against Cross-Site Request Forgery attacks
+ct_checkjs
+ct_fkp_timestamp
+ct_pointer_data
+Ce cookie sert à filtrer les spam lors de la soumission de formulaire
+ct_ps_timestamp
+Ce cookie sert à filtrer les spams lors de la soumission de formulaire
+ct_screen_info
+No description
+ct_sfw_pass_key
+ct_timezone
+PHPSESSID
+This cookie is native to PHP applications. The cookie is used to store and identify a users' unique session ID for the purpose of managing user session on the website. The cookie is a session cookies and is deleted when all the browser windows are closed.
+viewed_cookie_policy
+The cookie is set by the GDPR Cookie Consent plugin and is used to store whether or not user has consented to the use of cookies. It does not store any personal data.
+viewed_cookie_policy
+The cookie is set by the GDPR Cookie Consent plugin and is used to store whether or not user has consented to the use of cookies. It does not store any personal data.
+Functional
+functional
+Functional cookies help to perform certain functionalities like sharing the content of the website on social media platforms, collect feedbacks, and other third-party features.
+Cookie
+Duration
+Description
+bcookie
+This cookie is set by linkedIn. The purpose of the cookie is to enable LinkedIn functionalities on the page.
+ig_did
+mautic_device_id
+Ce cookie permet de vous proposer une expérience optimale et personnalisée sur nos sites web
+mid
+The cookie is set by Instagram. The cookie is used to distinguish users and to show relevant content, for better user experience and security.
+urlgen
+The cookie is set by instagram to enable the user to browse through the website securely by preventing any cross-site request forgery.
+vuid
+This first party cookie created by Vimeo is used to assign a Vimeo Analytics unique id.
+YSC
+This cookies is set by Youtube and is used to track the views of embedded videos.
+Performance
+preferences
+Performance cookies are used to understand and analyze the key performance indexes of the website which helps in delivering a better user experience for the visitors.
+Analytics
+analytics
+Analytical cookies are used to understand how visitors interact with the website. These cookies help provide information on metrics the number of visitors, bounce rate, traffic source, etc.
+Cookie
+Duration
+Description
+__utmzz
+5 months 27 days
+No description
+__utmzzses
+__utmzzses
+No description
+_dc_gtm_UA-7498610-1
+No description
+_ga
+This cookie is installed by Google Analytics. The cookie is used to calculate visitor, session, camapign data and keep track of site usage for the site's analytics report. The cookies store information anonymously and assigns a randoly generated number to identify unique visitors.
+_gat
+This cookies is installed by Google Universal Analytics to throttle the request rate to limit the colllection of data on high traffic sites.
+_gid
+1 day
+This cookie is installed by Google Analytics. The cookie is used to store information of how visitors use a website and helps in creating an analytics report of how the wbsite is doing. The data collected including the number visitors, the source where they have come from, and the pages viisted in an anonymous form.
+_gid
+No description
+GPS
+This cookie is set by Youtube and registers a unique ID for tracking users based on their geographical location
+mautic_referer_id
+Ce cookie permet de vous proposer une expérience optimale et personnalisée sur nos sites web
+mautic_session_id
+Ce cookie permet de vous proposer une expérience optimale et personnalisée sur nos sites web
+mtc_id
+Ce cookie permet de vous proposer une expérience optimale et personnalisée sur nos sites web
+mtc_sid
+Ce cookie permet de vous proposer une expérience optimale et personnalisée sur nos sites web
+Advertisement
+advertisement
+Advertisement cookies are used to provide visitors with relevant ads and marketing campaigns. These cookies track visitors across websites and collect information to provide customized ads.
+Cookie
+Duration
+Description
+_fbp
+This cookie is set by Facebook to deliver advertisement when they are on Facebook or a digital platform powered by Facebook advertising after visiting this website.
+_fbp
+3 months
+No description
+fr
+The cookie is set by Facebook to show relevant advertisments to the users and measure and improve the advertisements. The cookie also tracks the behavior of the user across the web on sites that have Facebook pixel or Facebook social plugin.
+IDE
+Used by Google DoubleClick and stores information about how the user uses the website and any other advertisement before visiting the website. This is used to present users with ads that are relevant to them according to the user profile.
+NID
+This cookie is used by Google to a profile based on user's interest and display personalized ads to the users.
+VISITOR_INFO1_LIVE
+This cookie is set by Youtube. Used to track the information of the embedded YouTube videos on a website.
+Non Necessary
+non-necessary
+Any cookies that may not be particularly necessary for the website to function and is used specifically to collect user personal data via analytics, ads, other embedded contents are termed as non-necessary cookies. It is mandatory to procure user consent prior to running these cookies on your website.
+Others
+others-en
+Other uncategorized cookies are those that are being analyzed and have not been classified into a category as yet.
+Reject
+Save My Preferences
+Accept All
+English
+Français
