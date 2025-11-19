@@ -32,7 +32,7 @@ class LLMClient:
             "stream": False,
         }
 
-        async with httpx.AsyncClient(base_url=self.base_url, timeout=60.0) as client:
+        async with httpx.AsyncClient(base_url=self.base_url, timeout=300.0) as client:
             resp = await client.post("/api/chat", json=payload)
             resp.raise_for_status()
             data = resp.json()
