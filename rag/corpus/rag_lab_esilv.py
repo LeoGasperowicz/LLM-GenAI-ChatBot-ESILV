@@ -5,6 +5,7 @@ from langchain_community.document_loaders import (
     PyPDFLoader,
     DirectoryLoader,
     TextLoader,
+    Docx2txtLoader
 )
 from langchain_text_splitters import RecursiveCharacterTextSplitter
 from langchain_community.embeddings import HuggingFaceEmbeddings
@@ -73,17 +74,45 @@ def load_uploaded_docs():
 
     print(f"📥 Chargement des documents uploadés depuis : {UPLOADS_DIR}")
 
-    # Charger PDF + TXT uploadés
-    loader = DirectoryLoader(
-        str(UPLOADS_DIR),
-        glob="**/*.*",   # accepte .pdf, .txt, .docx, etc.
-        loader_cls=PyPDFLoader if str(UPLOADS_DIR).endswith(".pdf") else TextLoader,
-        loader_kwargs={"encoding": "utf-8", "autodetect_encoding": True},
-    )
+    docs = []
 
-    docs = loader.load()
-    print(f"   → {len(docs)} documents uploadés chargés")
+    # 1) PDFs uploadés
+    pdf_loader = DirectoryLoader(
+        str(UPLOADS_DIR),
+        glob="**/*.pdf",
+        loader_cls=PyPDFLoader,
+    )
+    pdf_docs = pdf_loader.load()
+    print(f"   → {len(pdf_docs)} PDFs uploadés chargés")
+    docs.extend(pdf_docs)
+
+    # 2) TXT uploadés
+    txt_loader = DirectoryLoader(
+        str(UPLOADS_DIR),
+        glob="**/*.txt",
+        loader_cls=TextLoader,
+        loader_kwargs={
+            "encoding": "utf-8",
+            "autodetect_encoding": True,
+        },
+    )
+    txt_docs = txt_loader.load()
+    print(f"   → {len(txt_docs)} TXT uploadés chargés")
+    docs.extend(txt_docs)
+
+    # 3) DOCX uploadés
+    
+    docx_loader = DirectoryLoader(
+        str(UPLOADS_DIR),
+        glob="**/*.docx",
+        loader_cls=Docx2txtLoader,
+    )
+    docx_docs = docx_loader.load()
+    print(f"   → {len(docx_docs)} DOCX uploadés chargés")
+    docs.extend(docx_docs)
+
     return docs
+
 
 
 def enrich_docs_with_filename(docs):

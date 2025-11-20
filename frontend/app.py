@@ -4,7 +4,7 @@ from datetime import datetime
 import streamlit as st
 import requests
 
-from config import APP_TITLE
+from config import APP_TITLE, BACKEND_BASE_URL
 from api_client import (
     chat as api_chat,
     get_admin_stats,
@@ -44,35 +44,7 @@ L'assistant peut répondre à des questions sur :
 """
     )
 
-    # 🔹🔹🔹 NOUVEAU : bloc pour ajouter des documents 🔹🔹🔹
-    st.markdown("---")
-    st.subheader("📄 Ajouter un document pour le RAG")
-
-    uploaded_files = st.file_uploader(
-        "Ajoute un ou plusieurs documents (PDF, TXT, DOCX, etc.)",
-        type=["pdf", "txt", "docx"],
-        accept_multiple_files=True,
-        key="chat_uploader",
-    )
-
-    if uploaded_files and st.button("Uploader les documents", key="chat_upload_btn"):
-        st.info("Envoi des fichiers au backend...")
-        for f in uploaded_files:
-            files = {"file": (f.name, f.getvalue())}
-            try:
-                resp = requests.post(
-                    "http://localhost:8000/api/upload-document",
-                    files=files,
-                )
-                if resp.status_code == 200:
-                    data = resp.json()
-                    st.success(f"✅ {data['filename']} uploadé et pris en compte.")
-                else:
-                    st.error(f"❌ Erreur pour {f.name} : {resp.text}")
-            except Exception as e:
-                st.error(f"❌ Erreur de connexion au backend : {e}")
-    st.markdown("---")
-    # 🔹🔹🔹 FIN NOUVEAU BLOC 🔹🔹🔹
+    # plus de bloc upload ici : il est dans la sidebar maintenant
 
     init_chat_state()
     user_id = get_user_id()
@@ -270,7 +242,40 @@ def render_admin_page():
 
 
 def render_sidebar():
+
+    st.sidebar.image("Logo-ESILV.jpg", use_container_width=True)
+    st.sidebar.markdown("---")
+
     st.sidebar.title("Navigation")
+
+    # --- Upload de documents dans la sidebar ---
+    st.sidebar.subheader("📄 Ajouter un document")
+
+    uploaded_files_sidebar = st.sidebar.file_uploader(
+        "Upload PDF / TXT / DOCX",
+        type=["pdf", "txt", "docx"],
+        accept_multiple_files=True,
+        key="sidebar_uploader",
+    )
+
+    if uploaded_files_sidebar and st.sidebar.button("📤 Uploader", key="sidebar_upload_btn"):
+        st.sidebar.info("Envoi des documents...")
+        for f in uploaded_files_sidebar:
+            files = {"file": (f.name, f.getvalue())}
+            try:
+                resp = requests.post(
+                    f"{BACKEND_BASE_URL}/upload-document",
+                    files=files,
+                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    st.sidebar.success(f"✔ {data['filename']} ajouté")
+                else:
+                    st.sidebar.error(f"Erreur pour {f.name} : {resp.text}")
+            except Exception as e:
+                st.sidebar.error(f"Erreur de connexion : {e}")
+    # -------------------------------------------------
+
     page = st.sidebar.radio(
         "Choisissez une vue",
         ["Chat étudiant", "Admin"],
