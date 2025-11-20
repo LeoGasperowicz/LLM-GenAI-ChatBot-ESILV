@@ -1,0 +1,26 @@
+[
+  {
+    "full_name": "Léo GASPEROWICZ",
+    "email": "leo@gasperowicz.fr",
+    "phone": "0750476769",
+    "raw_message": "Léo GASPEROWICZ, leo@gasperowicz.fr, 0750476769",
+    "user_id": "857c3d3f-e0c2-4c23-89fe-e25e2bc6838c",
+    "created_at": "2025-11-20T14:17:19.057087"
+  },
+  {
+    "full_name": "Nathan ARPIN 06789889",
+    "email": "nathin.arpin@gmail.com",
+    "phone": null,
+    "raw_message": "Nathan ARPIN, nathin.arpin@gmail.com, 06789889",
+    "user_id": "857c3d3f-e0c2-4c23-89fe-e25e2bc6838c",
+    "created_at": "2025-11-20T14:24:14.032129"
+  },
+  {
+    "full_name": "Sophie DAMBLIN",
+    "email": "sophiejelois@icloud.com",
+    "phone": null,
+    "raw_message": "Sophie DAMBLIN, sophiejelois@icloud.com",
+    "user_id": "857c3d3f-e0c2-4c23-89fe-e25e2bc6838c",
+    "created_at": "2025-11-20T14:38:08.862361"
+  }
+]

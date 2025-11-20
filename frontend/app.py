@@ -187,9 +187,10 @@ def render_admin_page():
             else:
                 st.write("_Aucun intent pour l'instant._")
 
-    # --- Contacts collectés ---
+    # --- Contacts collectés / personnes à recontacter ---
     with col2:
-        st.subheader("Contacts collectés")
+        st.subheader("📇 Personnes à recontacter")
+
         try:
             contacts = get_contacts()
         except APIClientError as e:
@@ -202,15 +203,17 @@ def render_admin_page():
         if contacts:
             for c in contacts:
                 st.markdown("---")
+
                 name = c.get("full_name") or "Nom inconnu"
                 email = c.get("email") or "Email inconnu"
-                phone = c.get("phone") or "Téléphone inconnu"
-                message = c.get("message") or ""
+                phone = c.get("phone") or "Téléphone non renseigné"
+                raw_message = c.get("raw_message") or ""
                 created_str = c.get("created_at")
 
-                st.markdown(f"**{name}**")
+                st.markdown(f"**👤 {name}**")
                 st.write(f"📧 {email}")
                 st.write(f"📱 {phone}")
+
                 if created_str:
                     try:
                         dt = datetime.fromisoformat(created_str)
@@ -218,11 +221,11 @@ def render_admin_page():
                     except Exception:
                         st.write(f"🕒 {created_str}")
 
-                if message:
-                    st.write("📝 Message :")
-                    st.info(message)
+                if raw_message:
+                    st.write("📝 Message initial :")
+                    st.info(raw_message)
         else:
-            st.info("Aucun contact pour le moment.")
+            st.info("Aucune personne à recontacter pour le moment.")
 
     st.markdown("---")
     st.caption(
