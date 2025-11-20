@@ -45,16 +45,16 @@ cd LLM-GenAI-ChatBot-ESILV
 At the root of the project:
 
 python -m pip install -r requirements.txt
-```bash
+
 
 ---
 
 # 🚀 5. Start the backend (FastAPI)
 
 In a new terminal:
-```bash
+
 uvicorn backend.main:app --reload
-```bash
+
 
 Backend is available at:
 👉 http://127.0.0.1:8000
@@ -67,10 +67,17 @@ API docs:
 # 💬 6. Start the frontend (Streamlit)
 
 In another terminal:
-```bash
+
 cd frontend
 python -m streamlit run app.py
-```bash
+
 
 Frontend UI is available at:
 👉 http://localhost:8501
+
+
+# 7. Build the rag 
+
+In a terminal at the root : 
+
+python rag/corpus/rag_lab_esilv.py --build

@@ -66,6 +66,47 @@ def load_txts():
     return docs
 
 
+def enrich_docs_with_filename(docs):
+    """
+    Ajoute le nom du fichier (et éventuellement l'URL) au début du contenu
+    de chaque document, pour que le RAG puisse en tenir compte dans la similarité.
+
+    Exemple : 
+    "Nom du document : international-student-guide-pole-leonard-de-vinci.pdf"
+    "Source : https://www.esilv.fr/.../international-student-guide-pole-leonard-de-vinci.pdf"
+    puis le texte normal.
+    """
+    enriched = []
+    for d in docs:
+        meta = d.metadata or {}
+        source = meta.get("source", "")
+        filename = None
+
+        if source:
+            try:
+                filename = Path(source).name
+            except Exception:
+                filename = source.split("/")[-1].split("\\")[-1]
+        else:
+            filename = "document_sans_nom"
+
+        header_lines = [f"Nom du document : {filename}"]
+        # Si tu stockes l'URL dans metadata (par exemple pour les PDF scrapés)
+        url = meta.get("url") or meta.get("source_url")
+        if url:
+            header_lines.append(f"Source : {url}")
+
+        header = "\n".join(header_lines)
+
+        # On préfixe le contenu existant
+        new_content = f"{header}\n\n{d.page_content}"
+        d.page_content = new_content
+
+        enriched.append(d)
+
+    return enriched
+
+
 # ============
 #  BUILD INDEX
 # ============
@@ -82,6 +123,8 @@ def build_index():
         return
 
     print(f"📚 Total documents (PDF + TXT) : {len(docs)}")
+
+    docs = enrich_docs_with_filename(docs)
 
     splitter = RecursiveCharacterTextSplitter(
         chunk_size=1000,
