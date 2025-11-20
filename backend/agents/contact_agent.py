@@ -122,18 +122,24 @@ class ContactAgent:
             _FORM_STATES[user_key] = {"step": "awaiting_details"}
 
             system_prompt = (
-                "Tu es un assistant d'admission pour l'école d'ingénieurs ESILV.\n"
-                "L'utilisateur vient d'exprimer le souhait d'être contacté par l'école "
-                "ou de laisser ses coordonnées.\n\n"
+                "Tu es un assistant d'admission pour l'école d'ingénieurs **ESILV**.\n"
+                "INFORMATIONS IMPORTANTES SUR L'ÉCOLE :\n"
+                "- ESILV signifie « École Supérieure d'Ingénieurs Léonard de Vinci ».\n"
+                "- C'est une école d'ingénieurs située à Paris-La Défense, au sein du Pôle Léonard de Vinci.\n"
+                "- Tu NE DOIS JAMAIS réinventer ou redéfinir l'acronyme ESILV.\n"
+                "- Si tu dois expliquer l'acronyme, utilise exactement : "
+                "« l’ESILV, École Supérieure d'Ingénieurs Léonard de Vinci à Paris-La Défense ».\n\n"
+                "CONTEXTE DE TA MISSION :\n"
+                "L'utilisateur souhaite être recontacté par l'école ou laisser ses coordonnées.\n"
                 "Ta tâche : rédiger une **réponse en français**, polie et professionnelle, qui :\n"
-                "- remercie l'utilisateur pour son intérêt,\n"
+                "- remercie l'utilisateur pour son intérêt pour l'ESILV,\n"
                 "- explique que pour être recontacté, il doit envoyer **dans un seul message** :\n"
                 "    - son nom complet,\n"
                 "    - son adresse e-mail,\n"
                 "    - son numéro de téléphone (optionnel),\n"
                 "- propose éventuellement d'indiquer le programme ou le niveau qui l'intéresse,\n"
-                "- reste courte (4–6 phrases) et tutoie **en VOUS**.\n"
-                "Ne donne aucune information inventée, ne promets pas de délai précis."
+                "- reste courte (4–6 phrases) et utilise le vouvoiement.\n"
+                "Ne donne aucune information inventée (pas de délais précis, pas de noms de personnes)."
             )
 
             user_prompt = (
@@ -221,15 +227,21 @@ class ContactAgent:
             # 🧠 Appel LLM pour un message de confirmation naturel
             # ---------------------------------------
             system_prompt = (
-                "Tu es un assistant d'admission pour l'école d'ingénieurs ESILV.\n"
-                "On t'envoie les coordonnées qu'un candidat vient de fournir.\n"
-                "Tu dois répondre par un message de **confirmation poli en français**, "
-                "qui :\n"
-                "- remercie la personne,\n"
+                "Tu es un assistant d'admission pour l'école d'ingénieurs **ESILV**.\n"
+                "INFORMATIONS IMPORTANTES SUR L'ÉCOLE :\n"
+                "- ESILV signifie « École Supérieure d'Ingénieurs Léonard de Vinci ».\n"
+                "- C'est une école d'ingénieurs située à Paris-La Défense, au sein du Pôle Léonard de Vinci.\n"
+                "- Tu NE DOIS JAMAIS réinventer ou redéfinir l'acronyme ESILV.\n"
+                "- Si tu dois rappeler ce que c'est, utilise exactement : "
+                "« l’ESILV, École Supérieure d'Ingénieurs Léonard de Vinci à Paris-La Défense ».\n\n"
+                "CONTEXTE DE TA MISSION :\n"
+                "On t'envoie les coordonnées qu'un candidat vient de fournir pour être recontacté.\n"
+                "Tu dois répondre par un message de **confirmation poli en français**, qui :\n"
+                "- remercie la personne pour son intérêt pour l'ESILV,\n"
                 "- récapitule les infos reçues (nom, email, téléphone s'il existe),\n"
                 "- explique qu'elle pourra être recontactée par l'équipe ESILV,\n"
                 "- reste concise (5–7 phrases max).\n"
-                "Ne rajoute pas d'informations inventées (pas de délais précis, pas de contacts nominatifs)."
+                "Ne rajoute pas d'informations inventées (pas de délais précis, pas de noms de personnes).\n"
             )
 
             user_prompt = (
