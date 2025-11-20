@@ -3,12 +3,17 @@ from typing import Dict
 
 from fastapi import APIRouter
 
-from ..models.schemas import ChatMessage, ChatResponse, Conversation, ConversationTurn
-from ..core.llm_client import llm_client  # 🔗 on importe le client LLM
+from ..models.schemas import (
+    ChatMessage,
+    ChatResponse,
+    Conversation,
+    ConversationTurn,
+)
+from ..agents.orchestrator_agent import orchestrator
 
 router = APIRouter(prefix="/chat", tags=["chat"])
 
-# Stockage en mémoire des conversations (à remplacer par DB si besoin)
+# Stockage en mémoire des conversations (simple mais suffisant pour le projet)
 CONVERSATIONS: Dict[str, Conversation] = {}
 
 
@@ -29,9 +34,9 @@ async def chat(message: ChatMessage) -> ChatResponse:
     Endpoint principal de chat.
     Le frontend Streamlit enverra les messages ici.
     """
-    conversation = get_or_create_conversation(message.user_id or "anonymous")
+    conversation = get_or_create_conversation(message.user_id)
 
-    # 1) Ajouter le message utilisateur à la conversation
+    # Ajouter le message utilisateur à la conversation
     conversation.turns.append(
         ConversationTurn(
             timestamp=datetime.utcnow(),
@@ -41,40 +46,19 @@ async def chat(message: ChatMessage) -> ChatResponse:
         )
     )
 
-    # 2) Appeler le LLM **avec RAG**
-    #    generate_with_rag retourne un dict :
-    #    { "answer": str, "sources": [ ... ] }
-    result = await llm_client.generate_with_rag(message.message)
+    # Passage par l'orchestrateur multi-agents
+    response: ChatResponse = await orchestrator.handle(conversation, message)
 
-    reply_text = result.get("answer", "(Pas de réponse)")
-    context_docs = result.get("sources", [])
-
-    # Tu peux mettre ce que tu veux ici comme "agent" et "intent"
-    agent_name = "rag_agent"
-    intent_name = "faq"
-
-    # 3) Ajouter la réponse de l'assistant à la conversation
+    # Ajouter la réponse de l'assistant à la conversation
     conversation.turns.append(
         ConversationTurn(
             timestamp=datetime.utcnow(),
             user_id=message.user_id,
             role="assistant",
-            content=reply_text,
-            agent=agent_name,
-            intent=intent_name,
+            content=response.reply,
+            agent=response.agent,
+            intent=response.intent,
         )
-    )
-
-    # 4) Construire la réponse pour le frontend
-    response = ChatResponse(
-        reply=reply_text,
-        agent=agent_name,
-        intent=intent_name,
-        metadata={
-            "provider": llm_client.provider,
-            "model": llm_client.model,
-        },
-        context_documents=context_docs,  # utilisé par le front pour afficher les sources
     )
 
     return response

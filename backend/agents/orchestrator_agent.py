@@ -1,51 +1,143 @@
-from ..models.schemas import ChatMessage, ChatResponse
+# backend/agents/orchestrator_agent.py
+
+from ..models.schemas import ChatMessage, ChatResponse, Conversation
+from ..core.llm_client import llm_client
 from .rag_agent import rag_agent
-from .form_agent import form_agent
+from .contact_agent import contact_agent, has_active_form
 
 
 class OrchestratorAgent:
+    """
+    Agent orchestrateur.
+    - Décide si on est sur une question FAQ / info -> RAG
+    - Ou sur une demande de contact / inscription -> ContactAgent (formulaire)
+    """
+
     name = "orchestrator"
 
-    async def detect_intent(self, message: str) -> str:
+    async def _detect_intent(self, text: str) -> str:
         """
-        Détection d'intent ultra simple basée sur des mots-clés.
-        À remplacer par vraies règles / LLM plus tard.
+        Renvoie 'faq', 'contact' ou 'unknown'.
+
+        Règles simples + fallback LLM.
         """
-        text = message.lower()
+        lower = (text or "").lower()
 
-        contact_keywords = ["contact", "rdv", "rendez-vous", "rendez vous",
-                            "inscription", "m'inscrire", "m inscrire", "dossier",
-                            "formulaire", "email", "mail", "téléphone"]
-        faq_keywords = ["programme", "admission", "cursus", "cours", "spécialité",
-                        "spécialisations", "diplôme", "alternance", "frais", "inscriptions"]
-
-        if any(k in text for k in contact_keywords):
+        # 🔹 RÈGLES POUR CONTACT / FORMULAIRE
+        contact_keywords = [
+            "coordonné",       # coordonnées, coordonnees
+            "laisser mes coord",
+            "laisser mes coordonnées",
+            "laisser mes coordonnees",
+            "contacter",
+            "recontacter",
+            "être recontacté",
+            "etre recontacte",
+            "prendre rendez-vous",
+            "prendre rendez vous",
+            "rdv",
+            "rendez-vous",
+            "rendez vous",
+            "contactez-moi",
+            "contacte moi",
+            "parler à un conseiller",
+            "parler a un conseiller",
+            "appeler",
+            "rappel téléphonique",
+            "rappel telephonique",
+            "inscription",
+            "m'inscrire",
+            "m inscrire",
+            "dossier de candidature",
+            "formulaire",
+        ]
+        if any(k in lower for k in contact_keywords):
             return "contact"
-        if any(k in text for k in faq_keywords):
+
+        # 🔹 RÈGLES SIMPLES POUR FAQ
+        faq_keywords = [
+            "programme",
+            "spécialisation",
+            "specialisation",
+            "majeure",
+            "admission",
+            "concours",
+            "parcoursup",
+            "frais de scolarité",
+            "frais de scolarite",
+            "tarif",
+            "alternance",
+            "stage",
+            "cours",
+            "matière",
+            "matiere",
+            "logement",
+            "résidence",
+            "residence",
+        ]
+        if any(k in lower for k in faq_keywords):
             return "faq"
-        return "unknown"
 
-    async def route(self, message: ChatMessage) -> ChatResponse:
-        """
-        Route le message vers l'agent approprié.
-        """
-        intent = await self.detect_intent(message.message)
+        # 🔹 Fallback LLM pour les cas ambigus
+        system_prompt = (
+            "Tu es un classificateur d'intentions pour un chatbot de l'école d'ingénieurs ESILV.\n"
+            "Tu dois décider si le message de l'utilisateur est :\n"
+            "- 'contact' : il veut être recontacté, laisser ses coordonnées, prendre rendez-vous,\n"
+            "             obtenir un suivi personnalisé, etc.\n"
+            "- 'faq' : il pose une question d'information (programmes, cours, admissions,\n"
+            "          vie étudiante, etc.).\n"
+            "- 'unknown' : si ce n'est pas clair.\n\n"
+            "IMPORTANT : Réponds UNIQUEMENT par : contact, faq, unknown."
+        )
 
-        if intent == "faq":
-            res = await rag_agent.handle(message)
-            res.intent = "faq"
-            return res
+        raw = (await llm_client.generate(prompt=text, system_prompt=system_prompt)).lower()
+
+        if "contact" in raw:
+            return "contact"
+        if "faq" in raw:
+            return "faq"
+        return "faq"
+
+    async def handle(self, conversation: Conversation, message: ChatMessage) -> ChatResponse:
+        """
+        Choisit le bon agent, appelle cet agent et renvoie un ChatResponse.
+        🔑 Si un formulaire est déjà en cours pour ce user, on continue avec ContactAgent.
+        """
+
+        # 0️⃣ SI FORMULAIRE DÉJÀ EN COURS -> ON CONTINUE LE FORMULAIRE
+        if has_active_form(message.user_id):
+            agent_response = await contact_agent.handle(message)
+            meta = dict(agent_response.metadata or {})
+            meta["orchestrator_intent"] = "contact"
+            meta["orchestrator_agent"] = self.name
+
+            return ChatResponse(
+                reply=agent_response.reply,
+                agent=agent_response.agent,
+                intent=agent_response.intent,
+                context_documents=agent_response.context_documents,
+                metadata=meta,
+            )
+
+        # 1️⃣ PAS DE FORMULAIRE EN COURS -> ON DÉTECTE L'INTENT
+        intent = await self._detect_intent(message.message)
 
         if intent == "contact":
-            res = await form_agent.handle(message)
-            res.intent = "contact"
-            return res
+            agent_response = await contact_agent.handle(message)
+        else:
+            agent_response = await rag_agent.handle(message)
 
-        # Intent inconnu : par défaut, utilise le RAG
-        res = await rag_agent.handle(message)
-        res.intent = "unknown"
-        res.metadata["note"] = "intent_unknown_used_rag"
-        return res
+        meta = dict(agent_response.metadata or {})
+        meta["orchestrator_intent"] = intent
+        meta["orchestrator_agent"] = self.name
+
+        return ChatResponse(
+            reply=agent_response.reply,
+            agent=agent_response.agent,
+            intent=agent_response.intent,
+            context_documents=agent_response.context_documents,
+            metadata=meta,
+        )
 
 
 orchestrator = OrchestratorAgent()

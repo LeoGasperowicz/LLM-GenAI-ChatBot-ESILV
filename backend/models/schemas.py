@@ -1,37 +1,39 @@
-from typing import Literal, List, Dict, Any, Optional
-from pydantic import BaseModel, Field
+from __future__ import annotations
+
 from datetime import datetime
+from typing import List, Literal, Optional, Any, Dict
+
+from pydantic import BaseModel, EmailStr
 
 
 class ChatMessage(BaseModel):
-    user_id: Optional[str] = Field(
-        default=None,
-        description="Identifiant utilisateur (ou session) fourni par le frontend."
-    )
-    message: str = Field(..., description="Message utilisateur.")
+    user_id: Optional[str] = None
+    message: str
 
+class AdminStats(BaseModel):
+    total_conversations: int
+    total_messages: int
+    top_intents: Dict[str, int]
 
 class ChatResponse(BaseModel):
     reply: str
-    agent: Literal["rag_agent", "form_agent", "orchestrator"]
-    intent: Literal["faq", "contact", "unknown"]
-    metadata: Optional[Dict[str, Any]] = None
 
-    # 🔥 On veut ici une liste de dicts pour les documents de contexte RAG
+    # Quel agent a répondu ?
+    agent: Literal["orchestrator", "rag_agent", "form_agent"]
+
+    # Intention principale
+    intent: Literal["faq", "contact", "unknown"] = "unknown"
+
+    # Contexte utilisé pour répondre (RAG)
+    # On stocke une liste de dicts : {source, page, snippet, is_pdf, url?}
     context_documents: Optional[List[Dict[str, Any]]] = None
 
-
-class ContactInfo(BaseModel):
-    user_id: Optional[str] = None
-    full_name: Optional[str] = None
-    email: Optional[str] = None
-    phone: Optional[str] = None
-    message: Optional[str] = None
-    created_at: datetime = Field(default_factory=datetime.utcnow)
+    # Extra (pour debug, routing, etc.)
+    metadata: Optional[Dict[str, Any]] = None
 
 
 class ConversationTurn(BaseModel):
-    timestamp: datetime = Field(default_factory=datetime.utcnow)
+    timestamp: datetime
     user_id: Optional[str] = None
     role: Literal["user", "assistant"]
     content: str
@@ -45,7 +47,10 @@ class Conversation(BaseModel):
     turns: List[ConversationTurn]
 
 
-class AdminStats(BaseModel):
-    total_conversations: int
-    total_messages: int
-    top_intents: dict[str, int]
+class Contact(BaseModel):
+    id: str
+    full_name: str
+    email: EmailStr
+    phone: Optional[str] = None
+    message: Optional[str] = None
+    created_at: datetime
