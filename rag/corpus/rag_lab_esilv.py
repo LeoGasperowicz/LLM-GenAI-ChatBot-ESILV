@@ -21,6 +21,7 @@ BASE_DIR = Path(__file__).resolve().parent  # -> rag/corpus
 
 PDF_DIR = BASE_DIR / "pdf"      # tes PDFs : rag/corpus/pdf
 TXT_DIR = BASE_DIR / "html"     # tes .txt issus du scraping : rag/corpus/html
+UPLOADS_DIR = BASE_DIR / "uploads"  # dossiers pour les fichiers uploadés : rag/corpus/uploads
 INDEX_DIR = BASE_DIR / "vector_store_faiss"
 
 EMB_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
@@ -63,6 +64,25 @@ def load_txts():
     )
     docs = loader.load()
     print(f"   → {len(docs)} documents TXT chargés")
+    return docs
+
+def load_uploaded_docs():
+    if not UPLOADS_DIR.exists():
+        print(f"⚠ Dossier UPLOADS inexistant : {UPLOADS_DIR}")
+        return []
+
+    print(f"📥 Chargement des documents uploadés depuis : {UPLOADS_DIR}")
+
+    # Charger PDF + TXT uploadés
+    loader = DirectoryLoader(
+        str(UPLOADS_DIR),
+        glob="**/*.*",   # accepte .pdf, .txt, .docx, etc.
+        loader_cls=PyPDFLoader if str(UPLOADS_DIR).endswith(".pdf") else TextLoader,
+        loader_kwargs={"encoding": "utf-8", "autodetect_encoding": True},
+    )
+
+    docs = loader.load()
+    print(f"   → {len(docs)} documents uploadés chargés")
     return docs
 
 
@@ -116,7 +136,8 @@ def build_index():
 
     pdf_docs = load_pdfs()
     txt_docs = load_txts()
-    docs = pdf_docs + txt_docs
+    uploaded_docs = load_uploaded_docs()
+    docs = pdf_docs + txt_docs + uploaded_docs
 
     if not docs:
         print("❌ Aucun document trouvé, index non créé.")

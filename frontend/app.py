@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime
 
 import streamlit as st
+import requests
 
 from config import APP_TITLE
 from api_client import (
@@ -43,6 +44,36 @@ L'assistant peut répondre à des questions sur :
 """
     )
 
+    # 🔹🔹🔹 NOUVEAU : bloc pour ajouter des documents 🔹🔹🔹
+    st.markdown("---")
+    st.subheader("📄 Ajouter un document pour le RAG")
+
+    uploaded_files = st.file_uploader(
+        "Ajoute un ou plusieurs documents (PDF, TXT, DOCX, etc.)",
+        type=["pdf", "txt", "docx"],
+        accept_multiple_files=True,
+        key="chat_uploader",
+    )
+
+    if uploaded_files and st.button("Uploader les documents", key="chat_upload_btn"):
+        st.info("Envoi des fichiers au backend...")
+        for f in uploaded_files:
+            files = {"file": (f.name, f.getvalue())}
+            try:
+                resp = requests.post(
+                    "http://localhost:8000/api/upload-document",
+                    files=files,
+                )
+                if resp.status_code == 200:
+                    data = resp.json()
+                    st.success(f"✅ {data['filename']} uploadé et pris en compte.")
+                else:
+                    st.error(f"❌ Erreur pour {f.name} : {resp.text}")
+            except Exception as e:
+                st.error(f"❌ Erreur de connexion au backend : {e}")
+    st.markdown("---")
+    # 🔹🔹🔹 FIN NOUVEAU BLOC 🔹🔹🔹
+
     init_chat_state()
     user_id = get_user_id()
 
@@ -80,7 +111,9 @@ L'assistant peut répondre à des questions sur :
 
                         # Petit extrait
                         if snippet:
-                            st.caption(snippet[:300] + ("…" if len(snippet) > 300 else ""))
+                            st.caption(
+                                snippet[:300] + ("…" if len(snippet) > 300 else "")
+                            )
 
                 # Détails techniques (debug)
                 if "agent" in meta or "intent" in meta:
@@ -150,7 +183,9 @@ L'assistant peut répondre à des questions sur :
                             st.markdown(f"- 📄 {source}")
 
                     if snippet:
-                        st.caption(snippet[:300] + ("…" if len(snippet) > 300 else ""))
+                        st.caption(
+                            snippet[:300] + ("…" if len(snippet) > 300 else "")
+                        )
 
             # Bloc debug
             if meta:

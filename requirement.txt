@@ -20,3 +20,4 @@ requests
 fastapi
 streamlit
 python-dotenv
+python-multipart
