@@ -28,6 +28,34 @@ def init_chat_state():
         st.session_state["messages"] = []
 
 
+def upload_files_to_backend(uploaded_files, location: str = "main"):
+    """
+    Envoie les fichiers au backend et affiche les messages de retour.
+    location : "main" (zone centrale) ou "sidebar".
+    """
+    placeholder = st.sidebar if location == "sidebar" else st
+
+    if not uploaded_files:
+        return
+
+    placeholder.info("Envoi des documents...")
+
+    for f in uploaded_files:
+        files = {"file": (f.name, f.getvalue())}
+        try:
+            resp = requests.post(
+                f"{BACKEND_BASE_URL}/upload-document",
+                files=files,
+            )
+            if resp.status_code == 200:
+                data = resp.json()
+                placeholder.success(f"✔ {data.get('filename', f.name)} ajouté")
+            else:
+                placeholder.error(f"Erreur pour {f.name} : {resp.text}")
+        except Exception as e:
+            placeholder.error(f"Erreur de connexion : {e}")
+
+
 # ---------- UI ----------
 
 
@@ -44,12 +72,14 @@ L'assistant peut répondre à des questions sur :
 """
     )
 
-    # plus de bloc upload ici : il est dans la sidebar maintenant
-
     init_chat_state()
     user_id = get_user_id()
 
-    # Affichage de l'historique
+    # état pour afficher / cacher l'uploader à gauche de la barre
+    if "show_bottom_uploader" not in st.session_state:
+        st.session_state["show_bottom_uploader"] = False
+
+    # Affichage de l'historique des messages
     for msg in st.session_state["messages"]:
         if msg["role"] == "user":
             with st.chat_message("user"):
@@ -92,10 +122,44 @@ L'assistant peut répondre à des questions sur :
                     with st.expander("Détails techniques (debug)", expanded=False):
                         st.json(meta)
 
-    # Zone de saisie
-    prompt = st.chat_input("Posez votre question sur l'ESILV...")
+    # ---- Zone de saisie custom : onglet upload à gauche + barre de recherche + bouton envoyer ----
+    with st.container():
+        col_plus, col_input, col_send = st.columns([1, 7, 1])
 
-    if prompt:
+        # Colonne gauche : onglet +
+        with col_plus:
+            if st.button("➕", key="toggle_bottom_uploader", help="Uploader des documents"):
+                st.session_state["show_bottom_uploader"] = not st.session_state.get(
+                    "show_bottom_uploader", False
+                )
+
+            if st.session_state.get("show_bottom_uploader", False):
+                uploaded_files_bottom = st.file_uploader(
+                    "Docs",
+                    type=["pdf", "txt", "docx"],
+                    accept_multiple_files=True,
+                    key="bottom_uploader",
+                    label_visibility="collapsed",
+                )
+                if uploaded_files_bottom and st.button("📤", key="bottom_upload_btn"):
+                    upload_files_to_backend(uploaded_files_bottom, location="main")
+
+        # Colonne centrale : barre de recherche / saisie
+        with col_input:
+            user_input = st.text_input(
+                "Posez votre question sur l'ESILV...",
+                key="chat_input",
+                label_visibility="collapsed",
+            )
+
+        # Colonne droite : bouton envoyer
+        with col_send:
+            send = st.button("➤", key="send_message")
+
+    # Si on clique sur Envoyer, on traite le message
+    if send and user_input.strip():
+        prompt = user_input.strip()
+
         # Afficher immédiatement le message utilisateur
         st.session_state["messages"].append(
             {"role": "user", "content": prompt, "meta": {}}
@@ -243,37 +307,11 @@ def render_admin_page():
 
 def render_sidebar():
 
-    st.sidebar.image("Logo-ESILV.jpg", use_container_width=True)
+    st.sidebar.image("Logo-ESILV.jpg", width=140)
     st.sidebar.markdown("---")
 
     st.sidebar.title("Navigation")
 
-    # --- Upload de documents dans la sidebar ---
-    st.sidebar.subheader("📄 Ajouter un document")
-
-    uploaded_files_sidebar = st.sidebar.file_uploader(
-        "Upload PDF / TXT / DOCX",
-        type=["pdf", "txt", "docx"],
-        accept_multiple_files=True,
-        key="sidebar_uploader",
-    )
-
-    if uploaded_files_sidebar and st.sidebar.button("📤 Uploader", key="sidebar_upload_btn"):
-        st.sidebar.info("Envoi des documents...")
-        for f in uploaded_files_sidebar:
-            files = {"file": (f.name, f.getvalue())}
-            try:
-                resp = requests.post(
-                    f"{BACKEND_BASE_URL}/upload-document",
-                    files=files,
-                )
-                if resp.status_code == 200:
-                    data = resp.json()
-                    st.sidebar.success(f"✔ {data['filename']} ajouté")
-                else:
-                    st.sidebar.error(f"Erreur pour {f.name} : {resp.text}")
-            except Exception as e:
-                st.sidebar.error(f"Erreur de connexion : {e}")
     # -------------------------------------------------
 
     page = st.sidebar.radio(
@@ -282,6 +320,21 @@ def render_sidebar():
         index=0,
     )
     st.sidebar.markdown("---")
+    st.sidebar.subheader("🕓 Historique de vos questions")
+
+    messages = st.session_state.get("messages", [])
+    user_messages = [m["content"] for m in messages if m.get("role") == "user"]
+
+    if user_messages:
+        # On affiche les 10 dernières questions (de la plus récente à la plus ancienne)
+        for i, text in enumerate(reversed(user_messages[-10:]), start=1):
+            short = text.strip().replace("\n", " ")
+            if len(short) > 60:
+                short = short[:60] + "…"
+            st.sidebar.markdown(f"{i}. {short}")
+    else:
+        st.sidebar.caption("Aucune question pour le moment.")
+
     st.sidebar.caption("Projet ESILV Smart Assistant")
 
     return page
