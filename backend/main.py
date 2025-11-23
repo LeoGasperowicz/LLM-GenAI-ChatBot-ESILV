@@ -7,6 +7,7 @@ from .routers import chat, admin
 from pathlib import Path
 import shutil
 from rag.corpus.rag_lab_esilv import build_index
+from . import state
 
 def create_app() -> FastAPI:
     app = FastAPI(
@@ -56,7 +57,8 @@ def create_app() -> FastAPI:
                 status_code=500,
                 detail=f"Erreur lors de l'enregistrement du fichier : {e}",
             )
-
+        # 🟢 ENREGISTRER LE DERNIER FICHIER UPLOADÉ (PDF / DOCX / TXT)
+        state.LAST_UPLOADED_FILENAME = filename
         # 🔁 Réindexation du RAG après chaque upload
         try:
             build_index()

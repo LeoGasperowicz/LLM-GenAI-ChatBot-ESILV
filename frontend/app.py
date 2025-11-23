@@ -307,7 +307,7 @@ def render_admin_page():
 
 def render_sidebar():
 
-    st.sidebar.image("Logo-ESILV.jpg", width=140)
+    st.sidebar.image("Logo-ESILV.jpg", use_container_width=True)
     st.sidebar.markdown("---")
 
     st.sidebar.title("Navigation")

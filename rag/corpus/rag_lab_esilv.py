@@ -26,6 +26,11 @@ UPLOADS_DIR = BASE_DIR / "uploads"  # dossiers pour les fichiers uploadés : rag
 INDEX_DIR = BASE_DIR / "vector_store_faiss"
 
 EMB_MODEL = "sentence-transformers/all-MiniLM-L6-v2"
+# Embeddings partagés (chargés une seule fois)
+EMBEDDINGS = HuggingFaceEmbeddings(model_name=EMB_MODEL)
+
+# Cache global pour le vectorstore
+_VECTORSTORE: FAISS | None = None
 
 
 # ============
@@ -183,9 +188,9 @@ def build_index():
     chunks = splitter.split_documents(docs)
     print(f"   → {len(chunks)} chunks créés")
 
-    embeddings = HuggingFaceEmbeddings(model_name=EMB_MODEL)
+    
 
-    vectorstore = FAISS.from_documents(chunks, embeddings)
+    vectorstore = FAISS.from_documents(chunks, EMBEDDINGS)
     vectorstore.save_local(str(INDEX_DIR))
 
     print(f"✅ Index FAISS sauvegardé dans : {INDEX_DIR}")
@@ -196,13 +201,16 @@ def build_index():
 # ============
 
 def load_vectorstore() -> FAISS:
-    embeddings = HuggingFaceEmbeddings(model_name=EMB_MODEL)
-    vs = FAISS.load_local(
-        str(INDEX_DIR),
-        embeddings,
-        allow_dangerous_deserialization=True,
-    )
-    return vs
+    global _VECTORSTORE
+
+    if _VECTORSTORE is None:
+        # Chargement une seule fois depuis le disque
+        _VECTORSTORE = FAISS.load_local(
+            str(INDEX_DIR),
+            EMBEDDINGS,
+            allow_dangerous_deserialization=True,
+        )
+    return _VECTORSTORE
 
 
 def retrieve_docs(query: str, k: int = 4):
