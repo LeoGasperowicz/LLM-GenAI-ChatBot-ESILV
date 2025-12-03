@@ -65,10 +65,10 @@ def render_chat_page():
     st.markdown(
         """
 L'assistant peut répondre à des questions sur :
-- les **programmes ESILV**  
-- les **admissions**  
-- les **cours / spécialisations**  
-- et peut vous aider à laisser vos **coordonnées** pour être recontacté.
+- Les **programmes ESILV**  
+- Les **admissions**  
+- Les **cours / spécialisations**  
+- Et peut vous aider à laisser vos **coordonnées** pour être recontacté.
 """
     )
 
