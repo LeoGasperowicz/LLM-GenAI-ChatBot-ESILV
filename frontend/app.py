@@ -2,6 +2,7 @@ import uuid
 from datetime import datetime
 
 import streamlit as st
+import streamlit.components.v1 as components
 import requests
 
 from config import APP_TITLE, BACKEND_BASE_URL
@@ -12,9 +13,63 @@ from api_client import (
     APIClientError,
 )
 
+# =========================
+# THEME / STYLE
+# =========================
 
-# ---------- Utils ----------
+ESILV_RED = "#CF1053"
 
+
+def inject_sidebar_style():
+    st.markdown(
+        f"""
+        <style>
+        section[data-testid="stSidebar"] {{
+            background-color: {ESILV_RED} !important;
+        }}
+
+        section[data-testid="stSidebar"] * {{
+            color: #ffffff !important;
+        }}
+
+        section[data-testid="stSidebar"] hr {{
+            border-color: rgba(255,255,255,0.25) !important;
+        }}
+
+        section[data-testid="stSidebar"] button {{
+            background-color: rgba(255,255,255,0.16) !important;
+            color: #ffffff !important;
+            border-radius: 10px !important;
+            border: 1px solid rgba(255,255,255,0.35) !important;
+            width: 100% !important;
+            text-align: left !important;
+            font-weight: 600 !important;
+        }}
+        section[data-testid="stSidebar"] button:hover {{
+            background-color: rgba(255,255,255,0.28) !important;
+            border: 1px solid rgba(255,255,255,0.55) !important;
+        }}
+
+        button[kind="header"] {{
+            color: #ffffff !important;
+        }}
+
+        /* Highlight de la question ciblée */
+        .esilv-highlight {{
+            border: 2px solid rgba(207,16,83,0.55);
+            border-radius: 14px;
+            padding: 6px 10px;
+            background: rgba(207,16,83,0.06);
+        }}
+        </style>
+        """,
+        unsafe_allow_html=True,
+    )
+
+
+# =========================
+# STATE / UTILS
+# =========================
 
 def get_user_id() -> str:
     if "user_id" not in st.session_state:
@@ -22,23 +77,26 @@ def get_user_id() -> str:
     return st.session_state["user_id"]
 
 
-def init_chat_state():
+def init_state():
     if "messages" not in st.session_state:
-        # Liste de dicts {role: "user"/"assistant", content: str, meta: dict}
-        st.session_state["messages"] = []
+        st.session_state["messages"] = []  # [{role, content, meta}]
+    if "show_uploader" not in st.session_state:
+        st.session_state["show_uploader"] = False
+    if "jump_to_idx" not in st.session_state:
+        st.session_state["jump_to_idx"] = None  # index du message user cliqué
+    if "upload_status" not in st.session_state:
+        st.session_state["upload_status"] = []  # feedback upload (liste de strings)
 
 
 def upload_files_to_backend(uploaded_files, location: str = "main"):
-    """
-    Envoie les fichiers au backend et affiche les messages de retour.
-    location : "main" (zone centrale) ou "sidebar".
-    """
     placeholder = st.sidebar if location == "sidebar" else st
-
     if not uploaded_files:
         return
 
     placeholder.info("Envoi des documents...")
+
+    ok_msgs = []
+    err_msgs = []
 
     for f in uploaded_files:
         files = {"file": (f.name, f.getvalue())}
@@ -46,18 +104,77 @@ def upload_files_to_backend(uploaded_files, location: str = "main"):
             resp = requests.post(
                 f"{BACKEND_BASE_URL}/upload-document",
                 files=files,
+                timeout=120,
             )
             if resp.status_code == 200:
                 data = resp.json()
-                placeholder.success(f"✔ {data.get('filename', f.name)} ajouté")
+                ok_msgs.append(f"✔ {data.get('filename', f.name)} ajouté")
             else:
-                placeholder.error(f"Erreur pour {f.name} : {resp.text}")
+                err_msgs.append(f"❌ {f.name} : {resp.text}")
         except Exception as e:
-            placeholder.error(f"Erreur de connexion : {e}")
+            err_msgs.append(f"❌ {f.name} : {e}")
+
+    st.session_state["upload_status"] = ok_msgs + err_msgs
+
+    for m in ok_msgs:
+        placeholder.success(m)
+    for m in err_msgs:
+        placeholder.error(m)
 
 
-# ---------- UI ----------
+def render_sources(ctx_docs):
+    if not ctx_docs:
+        return
 
+    with st.expander("📚 Voir les sources utilisées", expanded=False):
+        for d in ctx_docs:
+            src = d.get("source") or "Document"
+            page = d.get("page", "N/A")
+            url = d.get("url") or d.get("source_url")
+
+            label = src
+            if page not in (None, "N/A"):
+                label += f" — page {page}"
+
+            if url:
+                st.markdown(f"- 📄 [{label}]({url})")
+            else:
+                st.markdown(f"- 📄 {label}")
+
+
+def scroll_to_message(target_idx: int):
+    """
+    Scroll vers l'ancre HTML #msg-{target_idx}
+    (JS exécuté dans un iframe -> parent.document)
+    """
+    if target_idx is None:
+        return
+
+    anchor_id = f"msg-{target_idx}"
+    components.html(
+        f"""
+        <script>
+        (function() {{
+          const id = "{anchor_id}";
+          const tryScroll = () => {{
+            const el = parent.document.getElementById(id);
+            if (el) {{
+              el.scrollIntoView({{ behavior: "smooth", block: "start" }});
+            }}
+          }};
+          setTimeout(tryScroll, 60);
+          setTimeout(tryScroll, 250);
+          setTimeout(tryScroll, 600);
+        }})();
+        </script>
+        """,
+        height=0,
+    )
+
+
+# =========================
+# CHAT PAGE
+# =========================
 
 def render_chat_page():
     st.header("💬 Assistant ESILV")
@@ -65,109 +182,85 @@ def render_chat_page():
     st.markdown(
         """
 L'assistant peut répondre à des questions sur :
-- Les **programmes ESILV**  
-- Les **admissions**  
-- Les **cours / spécialisations**  
-- Et peut vous aider à laisser vos **coordonnées** pour être recontacté.
+- Les **programmes ESILV**
+- Les **admissions**
+- Les **cours / spécialisations**
+- L’**international**
 """
     )
 
-    init_chat_state()
     user_id = get_user_id()
 
-    # état pour afficher / cacher l'uploader à gauche de la barre
-    if "show_bottom_uploader" not in st.session_state:
-        st.session_state["show_bottom_uploader"] = False
+    # Feedback upload (affiché une fois)
+    if st.session_state.get("upload_status"):
+        for msg in st.session_state["upload_status"]:
+            if msg.startswith("✔"):
+                st.success(msg)
+            else:
+                st.error(msg)
+        st.session_state["upload_status"] = []
 
-    # Affichage de l'historique des messages
-    for msg in st.session_state["messages"]:
+    # Scroll si clic historique
+    jump_idx = st.session_state.get("jump_to_idx")
+    if jump_idx is not None:
+        scroll_to_message(jump_idx)
+
+    # Historique complet du chat + ancres
+    for idx, msg in enumerate(st.session_state["messages"]):
         if msg["role"] == "user":
+            # ancre HTML (pour scroll)
+            st.markdown(f"<div id='msg-{idx}'></div>", unsafe_allow_html=True)
+
+            # highlight si c'est la question ciblée
+            if idx == jump_idx:
+                st.markdown("<div class='esilv-highlight'>", unsafe_allow_html=True)
+
             with st.chat_message("user"):
                 st.write(msg["content"])
+
+            if idx == jump_idx:
+                st.markdown("</div>", unsafe_allow_html=True)
+
         else:
             with st.chat_message("assistant"):
                 st.write(msg["content"])
-                meta = msg.get("meta") or {}
+                ctx_docs = (msg.get("meta") or {}).get("context_documents") or []
+                render_sources(ctx_docs)
 
-                # 🔍 Afficher les sources RAG pour les anciens messages
-                ctx_docs = meta.get("context_documents") or []
-                if ctx_docs:
-                    st.markdown("**📚 Sources utilisées :**")
-                    for i, doc in enumerate(ctx_docs, start=1):
-                        source = doc.get("source") or f"Document {i}"
-                        page = doc.get("page")
-                        url = doc.get("url")
-                        snippet = doc.get("snippet") or ""
-
-                        # Lien cliquable si une URL est fournie
-                        if url:
-                            label = f"{source}"
-                            if page not in (None, "N/A"):
-                                label += f" — page {page}"
-                            st.markdown(f"- 📄 [{label}]({url})")
-                        else:
-                            if page not in (None, "N/A"):
-                                st.markdown(f"- 📄 {source} — page {page}")
-                            else:
-                                st.markdown(f"- 📄 {source}")
-
-                        # Petit extrait
-                        if snippet:
-                            st.caption(
-                                snippet[:300] + ("…" if len(snippet) > 300 else "")
-                            )
-
-                # Détails techniques (debug)
-                if "agent" in meta or "intent" in meta:
-                    with st.expander("Détails techniques (debug)", expanded=False):
-                        st.json(meta)
-
-    # ---- Zone de saisie custom : onglet upload à gauche + barre de recherche + bouton envoyer ----
+    # Barre du bas : + upload + chat_input
     with st.container():
-        col_plus, col_input, col_send = st.columns([1, 7, 1])
+        col_plus, col_input = st.columns([1, 10], vertical_alignment="bottom")
 
-        # Colonne gauche : onglet +
         with col_plus:
-            if st.button("➕", key="toggle_bottom_uploader", help="Uploader des documents"):
-                st.session_state["show_bottom_uploader"] = not st.session_state.get(
-                    "show_bottom_uploader", False
-                )
+            if st.button("➕", key="toggle_upload_plus", help="Uploader un document"):
+                st.session_state["show_uploader"] = not st.session_state["show_uploader"]
 
-            if st.session_state.get("show_bottom_uploader", False):
-                uploaded_files_bottom = st.file_uploader(
+            if st.session_state["show_uploader"]:
+                files = st.file_uploader(
                     "Docs",
                     type=["pdf", "txt", "docx"],
                     accept_multiple_files=True,
-                    key="bottom_uploader",
+                    key="uploader_plus",
                     label_visibility="collapsed",
                 )
-                if uploaded_files_bottom and st.button("📤", key="bottom_upload_btn"):
-                    upload_files_to_backend(uploaded_files_bottom, location="main")
+                if files and st.button("📤 Envoyer", key="send_upload_plus"):
+                    upload_files_to_backend(files, location="main")
+                    st.session_state["show_uploader"] = False
+                    st.rerun()
 
-        # Colonne centrale : barre de recherche / saisie
         with col_input:
-            user_input = st.text_input(
-                "Posez votre question sur l'ESILV...",
-                key="chat_input",
-                label_visibility="collapsed",
-            )
+            prompt = st.chat_input("Posez votre question sur l'ESILV…")
 
-        # Colonne droite : bouton envoyer
-        with col_send:
-            send = st.button("➤", key="send_message")
+    # Envoi ENTER
+    if prompt:
+        # on sort du mode "ciblage"
+        st.session_state["jump_to_idx"] = None
 
-    # Si on clique sur Envoyer, on traite le message
-    if send and user_input.strip():
-        prompt = user_input.strip()
-
-        # Afficher immédiatement le message utilisateur
-        st.session_state["messages"].append(
-            {"role": "user", "content": prompt, "meta": {}}
-        )
+        # afficher la question immédiatement
+        st.session_state["messages"].append({"role": "user", "content": prompt, "meta": {}})
         with st.chat_message("user"):
             st.write(prompt)
 
-        # Appel backend
         try:
             with st.spinner("Réflexion de l'assistant..."):
                 resp = api_chat(user_id=user_id, message=prompt)
@@ -185,65 +278,33 @@ L'assistant peut répondre à des questions sur :
             "agent": resp.get("agent"),
             "intent": resp.get("intent"),
             "metadata": resp.get("metadata"),
-            "context_documents": resp.get("context_documents"),
+            "context_documents": resp.get("context_documents") or [],
         }
 
-        # Enregistrer la réponse
-        st.session_state["messages"].append(
-            {"role": "assistant", "content": reply_text, "meta": meta}
-        )
-
-        # Afficher la réponse
+        st.session_state["messages"].append({"role": "assistant", "content": reply_text, "meta": meta})
         with st.chat_message("assistant"):
             st.write(reply_text)
+            render_sources(meta["context_documents"])
 
-            # 🔍 Afficher les documents de contexte (RAG) renvoyés par le backend
-            ctx_docs = meta.get("context_documents") or []
-            if ctx_docs:
-                st.markdown("**📚 Sources utilisées :**")
-                for i, doc in enumerate(ctx_docs, start=1):
-                    source = doc.get("source") or f"Document {i}"
-                    page = doc.get("page")
-                    url = doc.get("url")
-                    snippet = doc.get("snippet") or ""
+        # refresh pour que l'historique soit clean
+        st.rerun()
 
-                    if url:
-                        label = f"{source}"
-                        if page not in (None, "N/A"):
-                            label += f" — page {page}"
-                        st.markdown(f"- 📄 [{label}]({url})")
-                    else:
-                        if page not in (None, "N/A"):
-                            st.markdown(f"- 📄 {source} — page {page}")
-                        else:
-                            st.markdown(f"- 📄 {source}")
 
-                    if snippet:
-                        st.caption(
-                            snippet[:300] + ("…" if len(snippet) > 300 else "")
-                        )
-
-            # Bloc debug
-            if meta:
-                with st.expander("Détails techniques (debug)", expanded=False):
-                    st.json(meta)
-
+# =========================
+# ADMIN PAGE
+# =========================
 
 def render_admin_page():
     st.header("🛠️ Dashboard Admin ESILV Assistant")
 
     col1, col2 = st.columns(2)
 
-    # --- Stats globales ---
     with col1:
         st.subheader("Statistiques globales")
         try:
             stats = get_admin_stats()
-        except APIClientError as e:
-            st.error(f"Erreur API : {e}")
-            stats = None
         except Exception as e:
-            st.error(f"Erreur inattendue : {e}")
+            st.error(f"Erreur : {e}")
             stats = None
 
         if stats:
@@ -258,23 +319,17 @@ def render_admin_page():
             else:
                 st.write("_Aucun intent pour l'instant._")
 
-    # --- Contacts collectés / personnes à recontacter ---
     with col2:
         st.subheader("📇 Personnes à recontacter")
-
         try:
             contacts = get_contacts()
-        except APIClientError as e:
-            st.error(f"Erreur API : {e}")
-            contacts = []
         except Exception as e:
-            st.error(f"Erreur inattendue : {e}")
+            st.error(f"Erreur : {e}")
             contacts = []
 
         if contacts:
             for c in contacts:
                 st.markdown("---")
-
                 name = c.get("full_name") or "Nom inconnu"
                 email = c.get("email") or "Email inconnu"
                 phone = c.get("phone") or "Téléphone non renseigné"
@@ -299,64 +354,69 @@ def render_admin_page():
             st.info("Aucune personne à recontacter pour le moment.")
 
     st.markdown("---")
-    st.caption(
-        "Ce dashboard utilise les endpoints `/api/admin/stats` et `/api/admin/contacts` "
-        "du backend FastAPI."
-    )
+    st.caption("Ce dashboard utilise les endpoints `/api/admin/stats` et `/api/admin/contacts` du backend FastAPI.")
 
+
+# =========================
+# SIDEBAR
+# =========================
 
 def render_sidebar():
+    inject_sidebar_style()
 
     st.sidebar.image("Logo-ESILV.jpg", use_container_width=True)
     st.sidebar.markdown("---")
 
     st.sidebar.title("Navigation")
+    page = st.sidebar.radio("Choisissez une vue", ["Chat étudiant", "Admin"], index=0)
 
-    # -------------------------------------------------
-
-    page = st.sidebar.radio(
-        "Choisissez une vue",
-        ["Chat étudiant", "Admin"],
-        index=0,
-    )
     st.sidebar.markdown("---")
-    st.sidebar.subheader("🕓 Historique de vos questions")
+    st.sidebar.subheader("🕓 Historique")
 
-    messages = st.session_state.get("messages", [])
-    user_messages = [m["content"] for m in messages if m.get("role") == "user"]
+    msgs = st.session_state.get("messages", [])
+    user_msgs = [(i, m.get("content", "")) for i, m in enumerate(msgs) if m.get("role") == "user"]
 
-    if user_messages:
-        # On affiche les 10 dernières questions (de la plus récente à la plus ancienne)
-        for i, text in enumerate(reversed(user_messages[-10:]), start=1):
-            short = text.strip().replace("\n", " ")
+    if user_msgs:
+        st.sidebar.caption("Clique sur une question :")
+        for idx, txt in reversed(user_msgs[-10:]):
+            short = txt.replace("\n", " ").strip()
             if len(short) > 60:
                 short = short[:60] + "…"
-            st.sidebar.markdown(f"{i}. {short}")
+
+            if st.sidebar.button(short, key=f"history_btn_{idx}"):
+                st.session_state["jump_to_idx"] = idx
+                st.rerun()
     else:
         st.sidebar.caption("Aucune question pour le moment.")
 
-    st.sidebar.caption("Projet ESILV Smart Assistant")
+    st.sidebar.markdown("---")
 
+    if st.sidebar.button("🗑️ Nouvelle conversation", key="new_convo"):
+        st.session_state["messages"] = []
+        st.session_state["jump_to_idx"] = None
+        st.session_state["show_uploader"] = False
+        st.session_state["upload_status"] = []
+        st.rerun()
+
+    st.sidebar.caption("Projet ESILV Smart Assistant")
     return page
 
 
-# ---------- Main ----------
-
+# =========================
+# MAIN
+# =========================
 
 def main():
-    st.set_page_config(
-        page_title=APP_TITLE,
-        page_icon="🤖",
-        layout="wide",
-    )
+    st.set_page_config(page_title=APP_TITLE, page_icon="🤖", layout="wide")
 
+    init_state()
     page = render_sidebar()
 
     st.title(APP_TITLE)
 
     if page == "Chat étudiant":
         render_chat_page()
-    elif page == "Admin":
+    else:
         render_admin_page()
 
 

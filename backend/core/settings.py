@@ -7,7 +7,7 @@ class Settings(BaseSettings):
 
     LLM_PROVIDER: str = "ollama"
     LLM_MODEL: str = "mistral"
-    OLLAMA_BASE_URL: str = "http://localhost:11434"
+    OLLAMA_BASE_URL: str = "http://127.0.0.1:11434"
 
     FRONTEND_ORIGIN: str = "http://localhost:8501"
 
